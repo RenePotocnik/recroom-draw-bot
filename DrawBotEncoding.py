@@ -165,51 +165,6 @@ def encode(img: Image) -> list[str]:
     return img_data
 
 
-def is_window_active(window_title: str = "Rec Room") -> bool:
-    """
-    Returns true when `window_title` becomes the active window
-
-    :param window_title: The title of the window
-    :return: When the window becomes active
-    """
-    if window_title not in (pyautogui.getActiveWindowTitle() or ""):  # getActiveWindowTitle is sometimes `None`
-        print(f"Waiting for {window_title} to be the active window... ", end="", flush=True)
-        # While RecRoom window is not active, sleep
-        while window_title not in (pyautogui.getActiveWindowTitle() or ""):
-            time.sleep(0.1)
-        print("OK")
-        time.sleep(0.5)
-    return True
-
-
-def is_color(compare_color: tuple[int, int, int], main_color: tuple[int, int, int], tolerance: int = 10) -> bool:
-    """
-    Compare `compare_color` to `main_color` with a given tolerance
-
-    :param compare_color: The color that is being compared
-    :param main_color: The color that is being compared
-    :param tolerance: How close the colors can be (1 - 255)
-    :return: Is `compare_color` same/similar as `main_color`
-    """
-    return ((abs(compare_color[0] - main_color[0]) < tolerance)
-            and (abs(compare_color[1] - main_color[1]) < tolerance)
-            and (abs(compare_color[2] - main_color[2]) < tolerance))
-
-
-def get_colors(main_color: tuple[int, int, int], coordinates: ImageCoords) -> bool:
-    """
-    Get the coordinates of the "finished print" text. Call function `is_color` to check if it's same as `main_color`
-
-    :param main_color: The color to compare the detected color to
-    :param coordinates: Coordinates of the window of pixels to be checked and compared
-    :return: If the color in any of the pixels match the `main_color`
-    """
-    image = ImageGrab.grab()
-    # for x_ in range(coordinates.min_x, coordinates.max_x):
-    #     return is_color(image.getpixel((x_, coordinates.min_y)), main_color)
-    return is_color(image.getpixel((coordinates.min_x, coordinates.min_y)), main_color)
-
-
 def main():
     # Prompt the user to input image name. If the image has attribute `palette` return None
     img: Image = get_image()
