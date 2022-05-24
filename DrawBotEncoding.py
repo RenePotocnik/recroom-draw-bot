@@ -143,10 +143,12 @@ def encode(img: Image) -> list[str]:
     :return: List of 512 char long strings
     """
     pixel_color: List[str] = []
+    full_image = Image.new("RGB", (img.width, img.height))
+    dither = False
 
     print("Encoding")
     for y in range(img.height):
-        print(f"{int(y / img.height * 100)}%", end="\r")
+        print(f"{int(y / img.height * 100)}%", end="\r", flush=True)
         for x in range(img.width):
             p = img.getpixel((x, y))  # Gets the color of the pixel at `x, y`
             if len(p) == 4:  # If the value is RGBA, the last `int` is removed
@@ -155,9 +157,14 @@ def encode(img: Image) -> list[str]:
                 # Check if the image has already been dithered, else find the closest color
                 p = RR_PALETTE[p]
             except KeyError:
-                p = RR_PALETTE[closest_color(p)]
+                dither = True
+                p = closest_color(p)
+                full_image.putpixel((x, y), p)
+                p = RR_PALETTE[p]
                 # closest_color(p)
             pixel_color.append(p)
+    if dither:
+        full_image.show()
 
     colors: List[Tuple[int, str]] = []
     count: int = 0
