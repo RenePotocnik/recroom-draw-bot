@@ -1,6 +1,7 @@
 # Draw Bot Encoding
 
-It will ask you to select an .png image. It will encode it into 512 character long strings that can be copied into 
-RecRoom and decoded and used in an CV2 image printer.  
+It will ask you to select a PNG image. It will encode it into 512 character long strings that can be copied into 
+RecRoom, decoded and used in a CV2 image printer. 
+If the image is not yet dithered, get the closes RecRoom color to every pixel. This results in a very flat looking image and fast print times due to there being no dithering. For dithering I suggest Photoshop (using included ACO files) or gimp.
 
-This branch features experimental converting real image colors into RecRoom clors. It does not dither the image so the image may look weird.
+CV2 image printer room will be published some time in the future under the name ^ImagePrinterBot
