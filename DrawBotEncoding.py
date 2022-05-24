@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Converts an image, that is already converted into RecRoom colors, into a 512 char long compressed string.
+Converts an image into a 512 char long compressed string.
 How is it encoded:
     the number in front of a char represents how many pixels of the same color are in a row,
     chars !#$%&()*+,./:;<=>?@[Ñ]^_{|}~¢£¤¥¦§¨©ª«¬Ö®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÈÌÐ represent the color.
@@ -8,8 +8,8 @@ How is it encoded:
 """
 import os
 import sys
-import time
 import tkinter
+from math import sqrt
 from pathlib import Path
 from tkinter import filedialog
 from typing import Tuple, List, NamedTuple
@@ -19,7 +19,8 @@ try:
     import pyperclip
     from PIL import Image, ImageGrab
 except ModuleNotFoundError:
-    exit(f'Please execute "{sys.executable} -m pip install -U PyAutoGUI pyperclip Pillow" and run this script again')
+    print(f'Please execute "{sys.executable} -m pip install -U PyAutoGUI pyperclip Pillow" and run this script again')
+    input()
 
 
 class ImageCoords(NamedTuple):
@@ -103,6 +104,7 @@ def get_image() -> Image:
     Ask user to input string name, open it. Image has to be in the same directory as the parent directory of this file
     :return: The image path
     """
+    print("Open image")
     root = tkinter.Tk()
     root.withdraw()
     img_path = filedialog.askopenfilename(filetypes=[("Image", "*.png")])
@@ -119,30 +121,57 @@ def get_image() -> Image:
     return img
 
 
+def closest_color(pixel_color: PixelColor) -> PixelColor:
+    """
+    Take an RGB value and find the closest pair in `RR_PALETTE`
+    :param pixel_color: The color of the pixel of the image
+    :return: The color from `RR_PALETTE` that is closest to `pixel_color`
+    """
+    r, g, b = pixel_color
+    color_diffs: List[tuple[float, PixelColor]] = []
+    for key in RR_PALETTE:
+        cr, cg, cb = key
+        color_diff = sqrt((r - cr) ** 2 + (g - cg) ** 2 + (b - cb) ** 2)
+        color_diffs.append((color_diff, key))
+    return min(color_diffs)[1]
+
+
 def encode(img: Image) -> list[str] or None:
     """
-    Takes an image and transforms it into a list of 512 char strings {Optional:[number of pixels][color]}
-    :param img: The image to be encoded. It already has to be dithered/converted to RR colors
+    Take an image and encodes it into a list of 512 char strings {Optional:[number of pixels][color]}
+    :param img: The image to be encoded.
     :return: List of 512 char long strings
     """
     pixel_color: List[str] = []
+    full_image = Image.new("RGB", (img.width, img.height))
+    dither = False
 
+    print("Encoding")
     for y in range(img.height):
+        print(f"{int(y / img.height * 100)}%", end="\r", flush=True)
         for x in range(img.width):
             p = img.getpixel((x, y))  # Gets the color of the pixel at `x, y`
             if len(p) == 4:  # If the value is RGBA, the last `int` is removed
                 p = p[:3]
             try:
+                # Check if the image has already been dithered, else find the closest color
                 p = RR_PALETTE[p]
             except KeyError:
-                return None
+                dither = True
+                p = closest_color(p)
+                full_image.putpixel((x, y), p)
+                p = RR_PALETTE[p]
+                # closest_color(p)
             pixel_color.append(p)
+    if dither:
+        full_image.show()
 
     colors: List[Tuple[int, str]] = []
     count: int = 0
     current_color: str = pixel_color[0]
     # `count` is the amount of `current_color` in a row
 
+    print("Compressing")
     for c in pixel_color:
         if c != current_color:
             colors.append((count, current_color))
@@ -176,16 +205,14 @@ def main():
 
     # Every image pixel is encoded into a list of 512 char long strings {[amount of pixels][color]}
     img_data: list[str] = encode(img)
-
-    if not img_data:
-        print("The image you're trying to enter is not yet converted into RecRoom colors.")
-        exit(input())
+    print("______________________\n")
 
     # Print all image data strings
-    print("\n".join(img_data))
+    print("\n\n".join(img_data))
 
     # Print amount of 512 char long strings and image dimensions
-    print(f"Generated {len(img_data)} strings for image WxH {img.width}x{img.height}")
+    print(f"_______________________________________________\n"
+          f"Generated {len(img_data)} strings for image WxH {img.width}x{img.height}")
 
     input()
 
