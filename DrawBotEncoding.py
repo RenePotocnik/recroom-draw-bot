@@ -119,7 +119,7 @@ def get_image() -> Image:
     return img
 
 
-def encode(img: Image) -> list[str]:
+def encode(img: Image) -> list[str] or None:
     """
     Takes an image and transforms it into a list of 512 char strings {Optional:[number of pixels][color]}
     :param img: The image to be encoded. It already has to be dithered/converted to RR colors
@@ -132,7 +132,10 @@ def encode(img: Image) -> list[str]:
             p = img.getpixel((x, y))  # Gets the color of the pixel at `x, y`
             if len(p) == 4:  # If the value is RGBA, the last `int` is removed
                 p = p[:3]
-            p = RR_PALETTE[p]
+            try:
+                p = RR_PALETTE[p]
+            except KeyError:
+                return None
             pixel_color.append(p)
 
     colors: List[Tuple[int, str]] = []
@@ -174,11 +177,17 @@ def main():
     # Every image pixel is encoded into a list of 512 char long strings {[amount of pixels][color]}
     img_data: list[str] = encode(img)
 
+    if not img_data:
+        print("The image you're trying to enter is not yet converted into RecRoom colors.")
+        exit(input())
+
     # Print all image data strings
     print("\n".join(img_data))
 
     # Print amount of 512 char long strings and image dimensions
     print(f"Generated {len(img_data)} strings for image WxH {img.width}x{img.height}")
+
+    input()
 
 
 if __name__ == '__main__':
