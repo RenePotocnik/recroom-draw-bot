@@ -8,6 +8,7 @@ How is it encoded:
 """
 import os
 import sys
+import time
 import tkinter
 from math import sqrt
 from pathlib import Path
@@ -180,6 +181,8 @@ def encode(img: Image) -> list[str] or None:
         count += 1
     colors.append((count, current_color))
 
+    print(f"Compressed {len(pixel_color)} chars into {len(colors)} chars")
+
     s: str = ""
     img_data: List[str] = []
     for amount, color in colors:
@@ -205,7 +208,8 @@ def main():
 
     # Every image pixel is encoded into a list of 512 char long strings {[amount of pixels][color]}
     img_data: list[str] = encode(img)
-    print("______________________\n")
+    print("Copying strings\n_______________\n")
+    time.sleep(2)
 
     # Print all image data strings
     print("\n\n".join(img_data))
