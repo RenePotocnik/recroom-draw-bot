@@ -222,7 +222,10 @@ def encode(img: Image) -> list[str] or None:
     return img_data
 
 
-def main():
+def main(output_strings: bool = True):
+    """
+    :param output_strings: Should the encoded data be printed into console
+    """
     # Prompt the user to input image name. If the image has attribute `palette` return None
     img: Image = get_image()
     if not img:
@@ -230,11 +233,12 @@ def main():
 
     # Every image pixel is encoded into a list of 512 char long strings {[amount of pixels][color]}
     img_data: list[str] = encode(img)
-    print("Copying strings\n_______________\n")
-    time.sleep(2)
 
-    # Print all image data strings
-    print("\n\n".join(img_data))
+    if output_strings:
+        print("Copying strings\n_______________\n")
+        time.sleep(2)
+        # Print all image data strings
+        print("\n\n".join(img_data))
 
     # Print amount of 512 char long strings and image dimensions
     print(f"_______________________________________________\n"
@@ -245,6 +249,6 @@ def main():
 
 if __name__ == '__main__':
     try:
-        main()
+        main(output_strings=True)
     except KeyboardInterrupt:
         pass
