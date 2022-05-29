@@ -137,6 +137,26 @@ def closest_color(pixel_color: PixelColor) -> PixelColor:
     return min(color_diffs)[1]
 
 
+def progress_update(y: int, img: Image, prefix='Progress', suffix='', length=50) -> None:
+    """
+    Functions displays a progress bar wit percentage in the console
+    :param y: The `y` value of the image
+    :param img: The image
+    :param prefix: Optional: Text in-front of the progress bar
+    :param suffix: Optional: Text behind the progress bar
+    :param length: Optional: The length of the progress bar
+    """
+    completed = int(length * y // img.height)
+    empty = length - completed
+    bar = "#" * completed + " " * empty
+    percent = f"{100 * (y / float(img.height)):.2f}"
+    print(f'\r{prefix} |{bar}| {percent}% {suffix}', end="\r")
+
+    # Print New Line on Complete
+    if y == img.height:
+        print()
+
+
 def encode(img: Image) -> list[str] or None:
     """
     Take an image and encodes it into a list of 512 char strings {Optional:[number of pixels][color]}
@@ -149,7 +169,6 @@ def encode(img: Image) -> list[str] or None:
 
     print("Encoding")
     for y in range(img.height):
-        print(f"{int(y / img.height * 100)}%", end="\r", flush=True)
         for x in range(img.width):
             p = img.getpixel((x, y))  # Gets the color of the pixel at `x, y`
             if len(p) == 4:  # If the value is RGBA, the last `int` is removed
@@ -164,6 +183,9 @@ def encode(img: Image) -> list[str] or None:
                 p = RR_PALETTE[p]
                 # closest_color(p)
             pixel_color.append(p)
+        # Print the progress
+        progress_update(y + 1, img)
+
     if dither:
         full_image.show()
 
