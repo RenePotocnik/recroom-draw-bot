@@ -148,7 +148,7 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
 def main():
     # Call function for encoding an image
     img_data: list[str] = Encoding.main()
-    # Inset beginning and end.
+    # Insert beginning and end.
     img_data.insert(0, "BEGIN")
     img_data.append("END")
 
