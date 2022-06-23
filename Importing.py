@@ -154,3 +154,11 @@ def main():
 
     # Call function for copying into RecRoom
     copy_into_rr_variable(img_data, delay=0.4 , pause_at_50=False, stop_at_500=False)
+
+
+main()
+
+# Change to `True` if you want the computer to lock (Win + L) when finished importing. 
+# useful if starting print before going to sleep/work
+if False:
+    subprocess.call("rundll32.exe user32.dll, LockWorkStation")
