@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Converts an image into a 512 char long compressed string.
 How is it encoded:
@@ -7,6 +6,7 @@ How is it encoded:
     There's 62 colors including eraser and tan, eraser is not recommended as it leaves an edge
 """
 import os
+import subprocess
 import sys
 import time
 import tkinter
@@ -20,8 +20,12 @@ try:
     import pyperclip
     from PIL import Image, ImageGrab
 except ModuleNotFoundError:
-    print(f'Please execute "{sys.executable} -m pip install -U PyAutoGUI pyperclip Pillow" and run this script again')
-    input()
+    print(f'Please execute the following line and run the script again:\n'
+          f'{sys.executable} -m pip install -U PyAutoGUI pyperclip Pillow')
+    # Ask the user to install all the necessary packages automatically
+    if input("Proceed to run the command automatically? [yes/no] ").find("yes"):
+        subprocess.call(f"{sys.executable} -m pip install -U PyAutoGUI pyperclip Pillow")
+    exit()
 
 
 class ImageCoords(NamedTuple):
@@ -32,6 +36,8 @@ class ImageCoords(NamedTuple):
     max_x: int
 
 
+ListCreateSize = 50  # The max. size of a `List Create`. 50 using `List Add`, 64 using `List Create`
+MaxStringLength = 280  # Maximum length string
 PixelColor = Tuple[int, int, int]
 
 RR_PALETTE: dict = {
@@ -102,10 +108,10 @@ RR_PALETTE: dict = {
 
 def get_image() -> Image:
     """
-    Ask user to input string name, open it. Image has to be in the same directory as the parent directory of this file
-    :return: The image path
+    Open file explorer, wait for user to open a PNG image
+    :return: The image
     """
-    print("Open image")
+    print("Open image", end="\r")
     root = tkinter.Tk()
     root.withdraw()
     img_path = filedialog.askopenfilename(filetypes=[("Image", "*.png")])
@@ -124,7 +130,11 @@ def get_image() -> Image:
 
 def closest_color(pixel_color: PixelColor) -> PixelColor:
     """
-    Take an RGB value and find the closest pair in `RR_PALETTE`
+    Take an RGB value and find the closest color in `RR_PALETTE`
+
+    It is recommended you use external programs to convert and dither images.
+    2 ACO (swatch) files are included if you're using Photoshop
+
     :param pixel_color: The color of the pixel of the image
     :return: The color from `RR_PALETTE` that is closest to `pixel_color`
     """
@@ -139,7 +149,7 @@ def closest_color(pixel_color: PixelColor) -> PixelColor:
 
 def progress_update(y: int, img: Image, prefix='Progress', suffix='', length=50) -> None:
     """
-    Functions displays a progress bar wit percentage in the console
+    Display a progress bar in the console
     :param y: The `y` value of the image
     :param img: The image
     :param prefix: Optional: Text in-front of the progress bar
@@ -154,20 +164,19 @@ def progress_update(y: int, img: Image, prefix='Progress', suffix='', length=50)
 
     # Print New Line on Complete
     if y == img.height:
-        print()
+        print(" " * (length + 30), end="\r")
 
 
 def encode(img: Image) -> list[str] or None:
     """
-    Take an image and encodes it into a list of 512 char strings {Optional:[number of pixels][color]}
+    Take an image and encode it into a list of {`MaxStringLength`} char strings {Optional:[number of pixels][color]}
     :param img: The image to be encoded.
-    :return: List of 512 char long strings
+    :return: List of {`MaxStringLength`} char long strings
     """
     pixel_color: List[str] = []
     full_image = Image.new("RGB", (img.width, img.height))
     dither = False
 
-    print("Encoding")
     for y in range(img.height):
         for x in range(img.width):
             p = img.getpixel((x, y))  # Gets the color of the pixel at `x, y`
@@ -184,7 +193,7 @@ def encode(img: Image) -> list[str] or None:
                 # closest_color(p)
             pixel_color.append(p)
         # Print the progress
-        progress_update(y + 1, img)
+        progress_update(y + 1, img, "Encoding")
 
     if dither:
         full_image.show()
@@ -194,7 +203,6 @@ def encode(img: Image) -> list[str] or None:
     current_color: str = pixel_color[0]
     # `count` is the amount of `current_color` in a row
 
-    print("Compressing")
     for c in pixel_color:
         if c != current_color:
             colors.append((count, current_color))
@@ -213,7 +221,7 @@ def encode(img: Image) -> list[str] or None:
         else:
             ns = color
 
-        if len(s + ns) > 512:
+        if len(s + ns) > MaxStringLength:  # 512
             img_data.append(s)
             s = ""
         s += ns
@@ -222,16 +230,15 @@ def encode(img: Image) -> list[str] or None:
     return img_data
 
 
-def main(output_strings: bool = True):
+def main(output_strings: bool = False):
     """
-    :param output_strings: Should the encoded data be printed into console
+    :param output_strings: Print the encoded image strings into the console
     """
-    # Prompt the user to input image name. If the image has attribute `palette` return None
+
     img: Image = get_image()
     if not img:
         exit()
 
-    # Every image pixel is encoded into a list of 512 char long strings {[amount of pixels][color]}
     img_data: list[str] = encode(img)
 
     if output_strings:
@@ -240,15 +247,17 @@ def main(output_strings: bool = True):
         # Print all image data strings
         print("\n\n".join(img_data))
 
-    # Print amount of 512 char long strings and image dimensions
-    print(f"_______________________________________________\n"
-          f"Generated {len(img_data)} strings for image WxH {img.width}x{img.height}")
+    # Print amount of {`MaxStringLength`} char long strings, image dimensions and total `List Create`s needed.
+    print(f"\nGenerated {len(img_data) + 2} strings for image WxH {img.width}x{img.height}")
+    print(f"Space needed: {len(img_data) // ListCreateSize} List creates (+ {len(img_data) % ListCreateSize})")
 
-    input()
+    input("Press enter to exit")
+
+    return img_data
 
 
 if __name__ == '__main__':
     try:
-        main(output_strings=True)
+        main(output_strings=True)  # Change this to `True` if you want the strings to be printed to console
     except KeyboardInterrupt:
         pass
