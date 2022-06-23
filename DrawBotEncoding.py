@@ -1,5 +1,5 @@
 """
-Converts an image into a 512 char long compressed string.
+Converts a PNG image into strings of predefined lenght
 How is it encoded:
     the number in front of a char represents how many pixels of the same color are in a row,
     chars !#$%&()*+,./:;<=>?@[Ñ]^_{|}~¢£¤¥¦§¨©ª«¬Ö®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÈÌÐ represent the color.
@@ -10,6 +10,7 @@ import subprocess
 import sys
 import time
 import tkinter
+import subprocess
 from math import sqrt
 from pathlib import Path
 from tkinter import filedialog
@@ -18,7 +19,7 @@ from typing import Tuple, List, NamedTuple
 try:
     import pyautogui
     import pyperclip
-    from PIL import Image, ImageGrab
+    from PIL import Image, ImageGrab        
 except ModuleNotFoundError:
     print(f'Please execute the following line and run the script again:\n'
           f'{sys.executable} -m pip install -U PyAutoGUI pyperclip Pillow')
@@ -26,7 +27,6 @@ except ModuleNotFoundError:
     if input("Proceed to run the command automatically? [yes/no] ").find("yes"):
         subprocess.call(f"{sys.executable} -m pip install -U PyAutoGUI pyperclip Pillow")
     exit()
-
 
 class ImageCoords(NamedTuple):
     min_y: int
@@ -119,7 +119,7 @@ def get_image() -> Image:
 
     img = Image.open(img_path)
 
-    # If the image has attribute `palette`, open Paint and return None
+    # If the image has attribute `palette` its metadata is a bit different. To solve this just open the image in paint and save it
     if img.palette:
         print("Image has `Palette` attribute. Open it in Paint and save.")
         os.system(f'mspaint.exe "{Path(img_path)}"')
