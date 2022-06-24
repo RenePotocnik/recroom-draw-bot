@@ -36,10 +36,10 @@ class ImageCoords(NamedTuple):
     max_x: int
 
 
-ListCreateSize = 50  # The max. size of a `List Create`. 50 using `List Add`, 64 using `List Create`
-MaxStringLength = 280  # Maximum length string^
-MaxSquareCanvasSize = (1024, 1024)
-MaxRectangleCanvasSize = (1024, 1429)
+ListCreateSize: int = 50  # The max. size of a `List Create`. 50 using `List Add`, 64 using `List Create`
+MaxStringLength: int = 280  # Maximum length string^
+MaxSquareCanvasSize: tuple[int, int] = (1024, 1024)
+MaxRectangleCanvasSize: tuple[int, int] = (1024, 1429)
 
 PixelColor = Tuple[int, int, int]
 
