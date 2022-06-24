@@ -37,7 +37,7 @@ def is_window_active(window_title: str = "Rec Room") -> bool:
         # While RecRoom window is not active, sleep
         while window_title not in (pyautogui.getActiveWindowTitle() or ""):
             time.sleep(0.1)
-        print(" " * 70, end="\r")
+        print(" " * 70, end="\r")  # Empty the last line in the console
         time.sleep(0.5)
     return True
 
@@ -58,7 +58,7 @@ def is_color(compare_color: tuple[int, int, int], main_color: tuple[int, int, in
 
 def found_colors(main_color: tuple[int, int, int], coordinates: ImageCoords) -> bool:
     """
-    Get the coordinates of the "finished print" text. Call function `is_color` to check if it's same as `main_color`
+    Returns True if `main_color` is found in the given coordinates
 
     :param main_color: The color to compare the detected color to
     :param coordinates: Coordinates of the window of pixels to be checked and compared
@@ -74,6 +74,14 @@ def found_colors(main_color: tuple[int, int, int], coordinates: ImageCoords) -> 
 
 
 def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: bool = False, stop_at_500: bool = False):
+    """
+    Function copies strings of data into the RecRoom Variable.
+
+    :param img_data: A list of strings to be imported into RecRoom
+    :param delay: The delay between main actions (click > copy > confirm)
+    :param pause_at_50: Should the script pause efor a given amout of time every 50 imported strings (could prevent dissconnection)
+    :param stop_at_500: Should the script full stop every 500 imported strings, and wait for the user to press enter (cound prevent dissconnection)
+    """
     input_field: tuple[int, int] = (1294, 828)
     confirm: tuple[int, int] = (2165, 113)  # Expand button
     # confirm: tuple[int, int] = (2356, 920)  # Scroll bar
