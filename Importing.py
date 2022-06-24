@@ -26,6 +26,7 @@ class Colors(NamedTuple):
 
 def is_window_active(window_title: str = "Rec Room") -> bool:
     """
+    Does not return before `window_title` becomes the active window
     Returns true when `window_title` becomes the active window
 
     :param window_title: The title of the window
