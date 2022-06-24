@@ -83,9 +83,9 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
     :param stop_at_500: Should the script full stop every 500 imported strings, and wait for the user to press enter (cound prevent dissconnection)
     """
     input_field: tuple[int, int] = (1294, 828)
-    confirm: tuple[int, int] = (2165, 113)  # Expand button
-    # confirm: tuple[int, int] = (2356, 920)  # Scroll bar
-    num_strings = len(img_data)
+    confirm_expand_button: tuple[int, int] = (2165, 113)  # Coords of the "Expand All" button
+    confirm_scroll_bar: tuple[int, int] = (2356, 920)  # Coords of the side Scroll Bar
+    num_strings: int = len(img_data)
 
     if input(f"\nProceed to copy all {num_strings} strings to RecRoom? [y/n] ").lower() == "y":
         time_at_start = time.time()
@@ -129,7 +129,7 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
             # Max 10 tries to successfully confirm the string
             for _ in range(10):
                 # Click on the "confirm" area
-                pyautogui.click(confirm)
+                pyautogui.click(confirm_expand_button)
                 time.sleep(delay)
                 if not found_colors(main_color=(55, 57, 61),
                                     coordinates=ImageCoords(min_y=662, min_x=262, max_x=400, max_y=680)):
