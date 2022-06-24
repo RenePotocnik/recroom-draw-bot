@@ -19,9 +19,9 @@ class ImageCoords(NamedTuple):
 
 
 class Colors(NamedTuple):
-    text = (55, 57, 61)
-    white = (229, 225, 216)
-    green = (187, 205, 182)
+    text = (55, 57, 61)  # The color of text in the Variable Input field (black)
+    white = (229, 225, 216)  # The white background of the Variable Input field
+    green = (187, 205, 182)  # The Variable Input field sometimes turns green - this is that color.
 
 
 def is_window_active(window_title: str = "Rec Room") -> bool:
