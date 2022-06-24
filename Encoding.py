@@ -119,6 +119,16 @@ def get_image() -> Image:
 
     img = Image.open(img_path)
 
+    if img.width == img.height > 1024:
+        if input("Max. image size is 1024*1024 (square canvas).\n"
+                 "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
+                 "Do you wish to continue anyway? [yes/no] >").find("yes") == -1:
+            exit()
+    elif img.width > 1024 and img.height > 1429:
+        pass
+    elif img.width > 1429 and img.height > 1024:
+        pass
+
     # If the image has attribute `palette` its metadata is a bit different. To solve this just open the image in paint and save it
     if img.palette:
         print("Image has `Palette` attribute. Open it in Paint and save.")
