@@ -123,10 +123,13 @@ def get_image() -> Image:
 
     img = Image.open(img_path)
 
+    # Check if the image is smaller than the max resolution of the canvas.
     for width, height in MaxRectangleCanvasSize:  # ((1024, 1429), (1429, 1024))
         if img.width <= width and img.height <= height:
+            # The image is not to big
             break
     else:
+        # If the image is too big prompt the user to continue or exit.
         if input("Max. image size is 1024*1429 (rectangle - vertical), 1429*1024 (rectangle - horizontal) or 1024*1024 (square).\n"
                  "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
                  f"Selected image dimensions [W*H]: {img.width}*{img.height}\n"
