@@ -130,32 +130,8 @@ def get_image() -> Image:
         if input("Max. image size is 1024*1429 (rectangle - vertical), 1429*1024 (rectangle - horizontal) or 1024*1024 (square).\n"
                  "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
                  f"Selected image dimensions [W*H]: {img.width}*{img.height}\n"
-                 "Do you wish to continue anyway? [yes/no] >").find("yes") == -1:
+                 "Do you wish to continue anyway? [yes/no] > ").find("yes") == -1:
             exit()
-
-    """
-    if img.width == img.height > 1024:
-        if input("Max. image size is 1024*1024 (square canvas).\n"
-                 "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
-                 "Do you wish to continue anyway? [yes/no] >").find("yes") == -1:
-            exit()
-    elif img.width > 1024 and img.height > 1429:
-        if input("Max. image size is 1024*1429.\n"
-                 "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
-                 "Do you wish to continue anyway? [yes/no] >").find("yes") == -1:
-            exit()
-
-    elif img.width > 1429 and img.height > 1024:
-        if input("Max. image size is 1429*1024.\n"
-                 "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
-                 "Do you wish to continue anyway? [yes/no] >").find("yes") == -1:
-            exit()
-    else:
-        if input("Max. image size is 1024*1429 (rectangle - vertical), 1429*1024 (rectangle - horizontal) or 1024*1024 (square canvas).\n"
-                 "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
-                 "Do you wish to continue anyway? [yes/no] >").find("yes") == -1:
-            exit()
-    """
 
     # If the image has attribute `palette` its metadata is a bit different. To solve this just open the image in paint and save it
     if img.palette:
