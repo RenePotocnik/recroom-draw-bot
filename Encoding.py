@@ -40,7 +40,7 @@ ListCreateSize: int = 50  # The max. size of a `List Create`. 50 using `List Add
 MaxStringLength: int = 280  # Maximum length string
 
 MaxSquareCanvasSize: tuple[int, int] = (1024, 1024)  # The Max. size of a square canvas
-MaxRectangleCanvasSize: tuple[int, int] = (1024, 1429)  # The Max. size of a rectangle canvas. It can be horizontal or vertical
+MaxRectangleCanvasSize: Tuple[tuple[int, int]] = ((1024, 1429), (1429, 1024))  # The Max. size of a rectangle canvas. It can be horizontal or vertical
 
 PixelColor = Tuple[int, int, int]
 
@@ -123,6 +123,17 @@ def get_image() -> Image:
 
     img = Image.open(img_path)
 
+    for width, height in MaxRectangleCanvasSize:  # ((1024, 1429), (1429, 1024))
+        if img.width <= width and img.height <= height:
+            break
+    else:
+        if input("Max. image size is 1024*1429 (rectangle - vertical), 1429*1024 (rectangle - horizontal) or 1024*1024 (square).\n"
+                 "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
+                 f"Selected image dimensions [W*H]: {img.width}*{img.height}\n"
+                 "Do you wish to continue anyway? [yes/no] >").find("yes") == -1:
+            exit()
+
+    """
     if img.width == img.height > 1024:
         if input("Max. image size is 1024*1024 (square canvas).\n"
                  "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
@@ -144,6 +155,7 @@ def get_image() -> Image:
                  "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
                  "Do you wish to continue anyway? [yes/no] >").find("yes") == -1:
             exit()
+    """
 
     # If the image has attribute `palette` its metadata is a bit different. To solve this just open the image in paint and save it
     if img.palette:
