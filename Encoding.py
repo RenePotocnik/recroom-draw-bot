@@ -268,8 +268,6 @@ def main(output_strings: bool = False):
     print(f"\nGenerated {len(img_data) + 2} strings for image WxH {img.width}x{img.height}")
     print(f"Space needed: {len(img_data) // ListCreateSize} List creates (+ {len(img_data) % ListCreateSize})")
 
-    input("Press enter to exit")
-
     return img_data
 
 

@@ -79,7 +79,7 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
 
     :param img_data: A list of strings to be imported into RecRoom
     :param delay: The delay between main actions (click > copy > confirm)
-    :param pause_at_50: Should the script pause efor a given amout of time every 50 imported strings (could prevent dissconnection)
+    :param pause_at_50: Should the script pause for a given amout of time every 50 imported strings (could prevent dissconnection)
     :param stop_at_500: Should the script full stop every 500 imported strings, and wait for the user to press enter (cound prevent dissconnection)
     """
     input_field: tuple[int, int] = (1294, 828)
