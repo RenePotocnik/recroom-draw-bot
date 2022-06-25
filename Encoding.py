@@ -2,7 +2,7 @@
 Converts a PNG image into strings of predefined length
 How is it encoded:
     the number in front of a char represents how many pixels of the same color are in a row,
-    chars !#$%&()*+,./:;<=>?@[Ñ]^_{|}~¢£¤¥¦§¨©ª«¬Ö®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÈÌÐ represent the color.
+    chars !#$%&()*+,./:;<=>?@[Ñ]^_{|}~¢£¤¥¦§¨©ª«¬Ö®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÈ represent the color.
     There's 62 colors including eraser and tan, eraser is not recommended as it leaves an edge
 """
 import os
@@ -109,9 +109,7 @@ RR_PALETTE: dict = {
     (99, 100, 102): "¾",
     (73, 74, 78): "¿",
     (45, 46, 50): "À",
-    (25, 23, 24): "È",
-    (255, 181, 136): "Ì",  # Tan
-    (254, 254, 254): "Ð"  # # Pure white/eraser. It causes weird edges so it should be avoided.
+    (25, 23, 24): "È"
 }
 
 
