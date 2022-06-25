@@ -3,7 +3,7 @@ Converts a PNG image into strings of predefined length
 How is it encoded:
     the number in front of a char represents how many pixels of the same color are in a row,
     chars !#$%&()*+,./:;<=>?@[Ñ]^_{|}~¢£¤¥¦§¨©ª«¬Ö®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÈ represent the color.
-    There's 62 colors including eraser and tan, eraser is not recommended as it leaves an edge
+    There's 60 colors.
 """
 import os
 import subprocess
@@ -207,12 +207,12 @@ def encode(img: Image) -> list[str] or None:
             try:
                 # Check if the image has already been dithered, else find the closest color
                 p = RR_PALETTE[p]
+
             except KeyError:
                 dither = True
                 p = closest_color(p)
-                full_image.putpixel((x, y), p)
+                full_image.putpixel((x, y), (p[0], p[1], p[2], 255))
                 p = RR_PALETTE[p]
-                # closest_color(p)
             pixel_color.append(p)
         # Print the progress
         progress_update(y + 1, img, "Encoding")
