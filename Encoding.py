@@ -106,7 +106,7 @@ RR_PALETTE: dict = {
     (45, 46, 50): "À",
     (25, 23, 24): "È",
     (255, 181, 136): "Ì",
-    (255, 255, 255): "Ð"  # Pure white/eraser. It causes weird edges so it should be avoided.    Tag = "Ð"
+    (254, 254, 254): "Ð"  # Pure white/eraser. It causes weird edges so it should be avoided.    Tag = "Ð"
 }
 
 
@@ -205,7 +205,7 @@ def encode(img: Image) -> list[str] or None:
             except KeyError:
                 dither = True
                 p = closest_color(p)
-                full_image.putpixel((x, y), p + (255,))
+                full_image.putpixel((x, y), p)
                 p = RR_PALETTE[p]
                 # closest_color(p)
             pixel_color.append(p)
