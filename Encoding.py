@@ -1,5 +1,5 @@
 """
-Converts a PNG image into strings of predefined lenght
+Converts a PNG image into strings of predefined length
 How is it encoded:
     the number in front of a char represents how many pixels of the same color are in a row,
     chars !#$%&()*+,./:;<=>?@[Ñ]^_{|}~¢£¤¥¦§¨©ª«¬Ö®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÈÌÐ represent the color.
@@ -131,7 +131,7 @@ def get_image() -> Image:
     else:
         # If the image is too big prompt the user to continue or exit.
         if input("Max. image size is 1024*1429 (rectangle - vertical), 1429*1024 (rectangle - horizontal) or 1024*1024 (square).\n"
-                 "Your image exceeds these parameters thus it will take longer to print at no noticable difference.\n"
+                 "Your image exceeds these parameters thus it will take longer to print at no noticeable difference.\n"
                  f"Selected image dimensions [W*H]: {img.width}*{img.height}\n"
                  "Do you wish to continue anyway? [yes/no] > ").find("yes") == -1:
             exit()
