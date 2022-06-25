@@ -12,5 +12,6 @@ def main():
     Importing.copy_into_rr_variable(img_data=img_data, delay=0.4, pause_at_50=False, stop_at_500=False)
 
 
-if __name__ == "__main__":
-    main()
+main()
+
+input("Press enter to exit")
