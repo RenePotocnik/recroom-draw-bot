@@ -205,7 +205,7 @@ def encode(img: Image) -> list[str] or None:
             except KeyError:
                 dither = True
                 p = closest_color(p)
-                full_image.putpixel((x, y), p)
+                full_image.putpixel((x, y), p + (255,))
                 p = RR_PALETTE[p]
                 # closest_color(p)
             pixel_color.append(p)
