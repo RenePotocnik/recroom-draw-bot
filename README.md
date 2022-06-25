@@ -1,6 +1,6 @@
 # Draw Bot Encoding
 
-Run `encoding&importing.py`.
+Run `CanvasPrinter.py`.
 
 Select an image you want to import into RecRoom. I suggest the image is already converted into a RecRoom color pallette (Photoshop ACO swatch files are included), and scaled to the appropriate size.
 
@@ -10,6 +10,6 @@ After the data has been encoded, you will be prompted to import all data to RecR
 
 If you run `Encoding.py` directly, all encoded image data will be printed into the console. If the image is large/colorful it might have to much encoded data to display in `CMD` (by default 9000 lines).
 
-If you run `Importing.py` directly, it will act the same as if you run `encoding&importing`.
+If you run `Importing.py` directly, it will act the same as if you run `CanvasPrinter.py`.
 
 Currently only 2560x1440 resolution supported.
