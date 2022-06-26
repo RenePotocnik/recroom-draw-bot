@@ -105,8 +105,8 @@ RR_PALETTE: dict = {
     (73, 74, 78): "¿",
     (45, 46, 50): "À",
     (25, 23, 24): "È",
-    (255, 181, 136): "Ì",
-    (254, 254, 254): "Ð"  # Pure white/eraser. It causes weird edges so it should be avoided.    Tag = "Ð"
+    (255, 181, 136): "Ì",  # Tan
+    (254, 254, 254): "Ð"  # Eraser
 }
 
 
