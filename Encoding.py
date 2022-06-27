@@ -40,7 +40,7 @@ ListCreateSize: int = 50  # The max. size of a `List Create`. 50 using `List Add
 MaxStringLength: int = 280  # Maximum length string
 
 MaxSquareCanvasSize: tuple[int, int] = (1024, 1024)  # The Max. size of a square canvas
-MaxRectangleCanvasSize: Tuple[tuple[int, int]] = ((1024, 1429), (1429, 1024))  # The Max. size of a rectangle canvas. It can be horizontal or vertical
+MaxRectangleCanvasSize: Tuple[tuple[int, int], tuple[int, int]] = ((1024, 1429), (1429, 1024))  # The Max. size of a rectangle canvas. It can be horizontal or vertical
 
 PixelColor = Tuple[int, int, int]
 
