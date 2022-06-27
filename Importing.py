@@ -272,7 +272,7 @@ def main():
     img_data.append("END")
 
     # Call function for copying into RecRoom
-    if input("Copy into List Create of Variable? [enter number]\n1. List Create\n2. Variable\n> ").find("1") != -1:
+    if input("Copy into List Create of Variable? Default: Variable. [enter number]\n1. List Create\n2. Variable\n> ").find("1") != -1:
         copy_into_recroom_listcreate(img_data=img_data, auto_continue=False, delay=0.3)
     else:
         copy_into_rr_variable(img_data, delay=0.4 , pause_at_50=False, stop_at_500=False)
