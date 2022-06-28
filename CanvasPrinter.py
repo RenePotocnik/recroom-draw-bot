@@ -5,8 +5,6 @@ import Importing
 def main():
     img_data: list[str] = Encoding.main()
 
-    
-
     if input("Copy into List Create of Variable? Default: Variable. [enter number]\n1. List Create\n2. Variable\n> ").find("1") != -1:
         # Insert beginning and end. Required when using my Image Printer Bot
         img_data.insert(0, "BEGIN")
