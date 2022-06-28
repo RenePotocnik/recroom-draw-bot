@@ -36,8 +36,12 @@ class ImageCoords(NamedTuple):
     max_x: int
 
 
-ListCreateSize = 50  # The max. size of a `List Create`. 50 using `List Add`, 64 using `List Create`
-MaxStringLength = 280  # Maximum length string
+ListCreateSize: int = 50  # The max. size of a `List Create`. 50 using `List Add`, 64 using `List Create`
+MaxStringLength: int = 280  # Maximum length string
+
+MaxSquareCanvasSize: tuple[int, int] = (1024, 1024)  # The Max. size of a square canvas
+MaxRectangleCanvasSize: Tuple[tuple[int, int], tuple[int, int]] = ((1024, 1429), (1429, 1024))  # The Max. size of a rectangle canvas. It can be horizontal or vertical
+
 PixelColor = Tuple[int, int, int]
 
 RR_PALETTE: dict = {
@@ -101,8 +105,8 @@ RR_PALETTE: dict = {
     (73, 74, 78): "¿",
     (45, 46, 50): "À",
     (25, 23, 24): "È",
-    (255, 181, 136): "Ì",
-    (254, 254, 254): "Ð"  # Pure white/eraser. It causes weird edges so it should be avoided.    Tag = "Ð"
+    (255, 181, 136): "Ì",  # Tan
+    (254, 254, 254): "Ð"  # # Pure white/eraser. It causes weird edges so it should be avoided.
 }
 
 
@@ -118,6 +122,19 @@ def get_image() -> Image:
     root.destroy()
 
     img = Image.open(img_path)
+
+    # Check if the image is smaller than the max resolution of the canvas.
+    for width, height in MaxRectangleCanvasSize:  # ((1024, 1429), (1429, 1024))
+        if img.width <= width and img.height <= height:
+            # The image is not to big
+            break
+    else:
+        # If the image is too big prompt the user to continue or exit.
+        if input("Max. image size is 1024*1429 (rectangle - vertical), 1429*1024 (rectangle - horizontal) or 1024*1024 (square).\n"
+                 "Your image exceeds these parameters thus it will take longer to print at no noticeable difference.\n"
+                 f"Selected image dimensions [W*H]: {img.width}*{img.height}\n"
+                 "Do you wish to continue anyway? [yes/no] > ").find("yes") == -1:
+            exit()
 
     # If the image has attribute `palette` its metadata is a bit different. To solve this just open the image in paint and save it
     if img.palette:
@@ -250,8 +267,6 @@ def main(output_strings: bool = False):
     # Print amount of {`MaxStringLength`} char long strings, image dimensions and total `List Create`s needed.
     print(f"\nGenerated {len(img_data) + 2} strings for image WxH {img.width}x{img.height}")
     print(f"Space needed: {len(img_data) // ListCreateSize} List creates (+ {len(img_data) % ListCreateSize})")
-
-    input("Press enter to exit")
 
     return img_data
 

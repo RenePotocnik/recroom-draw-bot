@@ -1,8 +1,15 @@
 # Draw Bot Encoding
 
-Run the script and select a PNG image. It will encode it into many 280 (used to be 512) character long strings that can be copied into 
-RecRoom, decoded and used in a CV2 image printer. 
+Run `CanvasPrinter.py`.
 
-If the image is not yet dithered, get the closes RecRoom color to every pixel. This results in a very flat looking image and fast print times due to the lack of dithering. It is suggested that you use external programs for color conversion and dithering as my current method takes a minute and produces mediocre results. I suggest Photoshop (using included ACO files) or gimp.
+Select an image you want to import into RecRoom. I suggest the image is already converted into a RecRoom color pallette (Photoshop ACO swatch files are included), and scaled to the appropriate size.
 
-CV2 image printer room and the rest of the scripts will be published very soon under the name ^ImagePrinterBot
+If the image is not converted it will automatically get converted, but the image quality might be worse as a result of no image dithering yet being implemented.
+
+After the data has been encoded, you will be prompted to import all data to RecRoom. For this you need to be in the ^ImageDrawBot (room not yet published) and follow the written instructions.
+
+If you run `Encoding.py` directly, all encoded image data will be printed into the console. If the image is large/colorful it might have to much encoded data to display in `CMD` (by default 9000 lines).
+
+If you run `Importing.py` directly, it will act the same as if you run `CanvasPrinter.py`.
+
+Currently only 2560x1440 resolution supported.
