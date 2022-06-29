@@ -120,7 +120,7 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
                 pyautogui.hotkey("ctrl", "v")
                 time.sleep(delay)
                 if found_colors(main_color=(55, 57, 61),
-                                coordinates=ImageCoords(min_y=662, min_x=262, max_x=400, max_y=680)):
+                                coordinates=ImageCoords(min_y=506, min_x=198, max_x=210, max_y=520)):
                     break
                 print("Failed copy")
                 pyautogui.click(input_field)
@@ -133,7 +133,7 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
                 pyautogui.click(confirm_expand_button)
                 time.sleep(delay)
                 if not found_colors(main_color=(55, 57, 61),
-                                    coordinates=ImageCoords(min_y=662, min_x=262, max_x=400, max_y=680)):
+                                    coordinates=ImageCoords(min_y=506, min_x=198, max_x=210, max_y=520)):
                     break
                 print("Failed confirm")
                 time.sleep(delay * 2)
