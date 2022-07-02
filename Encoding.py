@@ -1,5 +1,5 @@
 """
-Converts a PNG image into strings of predefined lenght
+Converts a PNG image into strings of predefined length
 How is it encoded:
     the number in front of a char represents how many pixels of the same color are in a row,
     chars !#$%&()*+,./:;<=>?@[Ñ]^_{|}~¢£¤¥¦§¨©ª«¬Ö®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÈÌÐ represent the color.
@@ -28,6 +28,7 @@ except ModuleNotFoundError:
         subprocess.call(f"{sys.executable} -m pip install -U PyAutoGUI pyperclip Pillow")
     exit()
 
+
 class ImageCoords(NamedTuple):
     min_y: int
     min_x: int
@@ -39,11 +40,15 @@ class ImageCoords(NamedTuple):
 ListCreateSize: int = 50  # The max. size of a `List Create`. 50 using `List Add`, 64 using `List Create`
 MaxStringLength: int = 280  # Maximum length string
 
-MaxSquareCanvasSize: tuple[int, int] = (1024, 1024)  # The Max. size of a square canvas
-MaxRectangleCanvasSize: Tuple[tuple[int, int], tuple[int, int]] = ((1024, 1429), (1429, 1024))  # The Max. size of a rectangle canvas. It can be horizontal or vertical
+# The Max. size of a square canvas
+MaxSquareCanvasSize: tuple[int, int] = (1024, 1024)
+# The Max. size of a rectangle canvas. It can be horizontal or vertical
+MaxRectangleCanvasSize: Tuple[tuple[int, int], tuple[int, int]] = ((1024, 1429), (1429, 1024))
 
+# Typing alias for color
 PixelColor = Tuple[int, int, int]
 
+# All of RecRoom color in order + tan marker + eraser
 RR_PALETTE: dict = {
     (228, 80, 80): "!",
     (211, 23, 24): "#",
@@ -126,17 +131,19 @@ def get_image() -> Image:
     # Check if the image is smaller than the max resolution of the canvas.
     for width, height in MaxRectangleCanvasSize:  # ((1024, 1429), (1429, 1024))
         if img.width <= width and img.height <= height:
-            # The image is not to big
+            # The image is not too big
             break
     else:
         # If the image is too big prompt the user to continue or exit.
-        if input("Max. image size is 1024*1429 (rectangle - vertical), 1429*1024 (rectangle - horizontal) or 1024*1024 (square).\n"
+        if input("Max. image size is 1024*1429 (rectangle - vertical), "
+                 "1429*1024 (rectangle - horizontal) or 1024*1024 (square).\n"
                  "Your image exceeds these parameters thus it will take longer to print at no noticeable difference.\n"
                  f"Selected image dimensions [W*H]: {img.width}*{img.height}\n"
                  "Do you wish to continue anyway? [yes/no] > ").find("yes") == -1:
             exit()
 
-    # If the image has attribute `palette` its metadata is a bit different. To solve this just open the image in paint and save it
+    # If the image has attributed `palette` its metadata is a bit different.
+    # To solve this just open the image in paint and save it
     if img.palette:
         print("Image has `Palette` attribute. Open it in Paint and save.")
         os.system(f'mspaint.exe "{Path(img_path)}"')
@@ -249,6 +256,9 @@ def encode(img: Image) -> list[str] or None:
 
 def main(output_strings: bool = False):
     """
+    Function to tie together all others.
+    Prompt for image, encode and output
+
     :param output_strings: Print the encoded image strings into the console
     """
 
