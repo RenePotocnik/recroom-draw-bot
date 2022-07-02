@@ -1,7 +1,8 @@
+import ctypes
 import subprocess
 import sys
 from tkinter import Image
-from typing import NamedTuple
+from typing import NamedTuple, Tuple
 
 import pyautogui
 import pyperclip
@@ -17,6 +18,11 @@ class ImageCoords(NamedTuple):
 
     max_y: int
     max_x: int
+    
+
+# Check if the users monitor is 1440p or 1080p
+user32 = ctypes.windll.user32
+screen_dimensions: Tuple[int, int] = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
 
 class Colors(NamedTuple):
@@ -74,7 +80,8 @@ def found_colors(main_color: tuple[int, int, int], coordinates: ImageCoords) -> 
     return False
 
 
-def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: bool = False, stop_at_500: bool = False):
+def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: bool = False,
+                          stop_at_500: bool = False):
     """
     Function copies strings of data into the RecRoom Variable.
 
@@ -83,9 +90,21 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
     :param pause_at_50: Should the script pause for a given amount of time every 50 imported strings (could prevent disconnection)
     :param stop_at_500: Should the script full stop every 500 imported strings, and wait for the user to press enter (could prevent disconnection)
     """
-    input_field: tuple[int, int] = (972, 626)
-    confirm_expand_button: tuple[int, int] = (1623, 87)  # Coords of the "Expand All" button
-    confirm_scroll_bar: tuple[int, int] = (1770, 680)  # Coords of the side Scroll Bar
+    if screen_dimensions == (2560, 1440):
+        input_field: tuple[int, int] = (1294, 828)
+        confirm_expand_button: tuple[int, int] = (2165, 113)  # Coords of the "Expand All" button
+        confirm_scroll_bar: tuple[int, int] = (2356, 920)  # Coords of the side Scroll Bar
+        
+        color_check = ImageCoords(min_y=662, min_x=262, max_x=400, max_y=680)
+    elif screen_dimensions == (1920, 1080):
+        input_field: tuple[int, int] = (972, 626)
+        confirm_expand_button: tuple[int, int] = (1623, 87)  # Coords of the "Expand All" button
+        confirm_scroll_bar: tuple[int, int] = (1770, 680)  # Coords of the side Scroll Bar
+        color_check = ImageCoords(min_y=504, min_x=210, max_x=300, max_y=540)
+    else:
+        print(f"Your monitor dimensions ({screen_dimensions[0]}x{screen_dimensions[1]}) are not yet supported.")
+        exit(input("Press enter to exit"))
+        
     num_strings: int = len(img_data)
 
     if input(f"\nProceed to copy all {num_strings} strings to RecRoom? [y/n] ").lower() == "y":
@@ -120,7 +139,7 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
                 pyautogui.hotkey("ctrl", "v")
                 time.sleep(delay)
                 if found_colors(main_color=(55, 57, 61),
-                                coordinates=ImageCoords(min_y=504, min_x=210, max_x=300, max_y=540)):
+                                coordinates=color_check):
                     break
                 print("Failed copy")
                 pyautogui.click(input_field)
@@ -133,11 +152,10 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
                 pyautogui.click(confirm_expand_button)
                 time.sleep(delay)
                 if not found_colors(main_color=(55, 57, 61),
-                                    coordinates=ImageCoords(min_y=504, min_x=210, max_x=300, max_y=540)):
+                                    coordinates=color_check):
                     break
                 print("Failed confirm")
                 time.sleep(delay * 2)
-
 
             ### Optional:
 
@@ -200,7 +218,7 @@ def copy_into_recroom_listcreate(img_data: list[str], auto_continue: bool = Fals
                 # In RR, click on the current list entry, and the input field
                 pyautogui.click()
                 time.sleep(delay)
-                pyautogui.click(x=1270, y=480)          # pyautogui.click(x=2200, y=257)
+                pyautogui.click(x=1270, y=480)  # pyautogui.click(x=2200, y=257)
                 time.sleep(delay)
 
                 # Paste the string into input
@@ -215,11 +233,11 @@ def copy_into_recroom_listcreate(img_data: list[str], auto_continue: bool = Fals
                 time.sleep(delay)
 
                 pyautogui.press("esc")
-                time.sleep(delay if num < num_strings/2 else delay * 2)
+                time.sleep(delay if num < num_strings / 2 else delay * 2)
 
                 # Check if there's GREEN color in the window specified by the `coordinates`
                 if not found_colors(main_color=(96, 203, 43),
-                                  coordinates=ImageCoords(min_y=725, min_x=1050, max_y=725, max_x=1111)):
+                                    coordinates=ImageCoords(min_y=725, min_x=1050, max_y=725, max_x=1111)):
                     # There's no green color, continue with the next string
                     retried = False
                     break
@@ -239,7 +257,7 @@ def copy_into_recroom_listcreate(img_data: list[str], auto_continue: bool = Fals
             # Move down using trigger handle in right hand
             pyautogui.click(button='right')
             time.sleep(delay)
-        """
+        """ # Commented because I might need it in the future
         # Enter an empty string to signal the in-game circuitry the print is finished
         time.sleep(0.3)
         pyautogui.click()
@@ -263,7 +281,6 @@ def copy_into_recroom_listcreate(img_data: list[str], auto_continue: bool = Fals
             pyautogui.press("x")
 
 
-
 def main():
     # Call function for encoding an image
     img_data: list[str] = Encoding.main()
@@ -272,7 +289,11 @@ def main():
     img_data.insert(0, "BEGIN")
     img_data.append("END")
 
-    copy_into_rr_variable(img_data, delay=0.4 , pause_at_50=False, stop_at_500=False)
+    # Call function for copying into RecRoom
+    if input("Copy into List Create of Variable? Default: Variable. [enter number]\n1. List Create\n2. Variable\n> ").find("1") != -1:
+        copy_into_recroom_listcreate(img_data=img_data, auto_continue=False, delay=0.3)
+    else:
+        copy_into_rr_variable(img_data, delay=0.4 , pause_at_50=False, stop_at_500=False)
 
 
 if __name__ == "__main__":
