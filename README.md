@@ -12,4 +12,4 @@ If you run `Encoding.py` directly, all encoded image data will be printed into t
 
 If you run `Importing.py` directly, it will act the same as if you run `CanvasPrinter.py`.
 
-Currently, only 2560x1440 resolution supported.
+Currently, only 2560x1440 and 1920x1080 resolutions supported.
