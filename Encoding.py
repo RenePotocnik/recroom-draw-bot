@@ -19,7 +19,7 @@ from typing import Tuple, List, NamedTuple
 try:
     import pyautogui
     import pyperclip
-    from PIL import Image, ImageGrab        
+    from PIL import Image, ImageGrab
 except ModuleNotFoundError:
     print(f'Please execute the following line and run the script again:\n'
           f'{sys.executable} -m pip install -U PyAutoGUI pyperclip Pillow')
@@ -114,6 +114,17 @@ RR_PALETTE: dict = {
     (254, 254, 254): "Ð"  # # Pure white/eraser. It causes weird edges so it should be avoided.
 }
 
+# All the RecRoom colors in one list. [R, G, B, R, G, B,...]
+ALL_COLORS: List[int] = [228, 80, 80, 211, 23, 24, 117, 7, 6, 123, 47, 47, 239, 127, 79, 245, 92, 25, 193, 55, 9, 127,
+                         66, 47, 247, 215, 106, 244, 197, 31, 181, 99, 0, 130, 97, 56, 137, 177, 81, 105, 161, 24, 47,
+                         76, 9, 66, 82, 43, 103, 190, 122, 16, 101, 34, 6, 59, 17, 51, 76, 55, 103, 218, 205, 0, 155,
+                         137, 0, 80, 71, 51, 86, 82, 101, 199, 236, 2, 172, 234, 6, 87, 117, 49, 91, 105, 100, 161, 244,
+                         23, 107, 221, 7, 57, 128, 50, 79, 121, 165, 133, 242, 80, 24, 221, 46, 18, 120, 86, 72, 121,
+                         225, 148, 242, 121, 66, 131, 66, 24, 74, 88, 61, 92, 238, 120, 178, 234, 46, 79, 130, 9, 63,
+                         104, 56, 78, 126, 64, 25, 69, 40, 22, 61, 29, 14, 36, 16, 5, 197, 132, 92, 143, 99, 72, 90, 62,
+                         48, 37, 28, 21, 246, 239, 233, 192, 188, 185, 153, 149, 146, 124, 120, 119, 99, 100, 102, 73,
+                         74, 78, 45, 46, 50, 25, 23, 24, 255, 181, 136, 254, 254, 254]
+
 
 def get_image() -> Image:
     """
@@ -191,15 +202,32 @@ def progress_update(y: int, img: Image, prefix='Progress', suffix='', length=50)
         print(" " * (length + 30), end="\r")
 
 
+def quantize(img) -> Image:
+    img = img.convert("RGB")
+
+    palette_image = Image.new("P", img.size)
+    palette_image.putpalette(ALL_COLORS)
+    new_image = img.quantize(palette=palette_image).convert("RGB")
+
+    print("Opening the final image...")
+    new_image.show()
+
+    return new_image
+
+
 def encode(img: Image) -> list[str] or None:
     """
-    Take an image and encode it into a list of {`MaxStringLength`} char strings {Optional:[number of pixels][color]}
+    Take an image and encode it into a list of {`MaxStringLength`}-char strings.
+    ...[number of pixels][color]...
+
     :param img: The image to be encoded.
     :return: List of {`MaxStringLength`} char long strings
     """
     pixel_color: List[str] = []
-    full_image = Image.new("RGB", (img.width, img.height))
+    full_image = Image.new("RGB", img.size)
     dither = False
+
+    img = quantize(img)
 
     for y in range(img.height):
         for x in range(img.width):
@@ -287,6 +315,6 @@ def main(output_strings: bool = False, wait_for_input: bool = False):
 
 if __name__ == '__main__':
     try:
-        main(output_strings=True, wait_for_input=True)  # Change this to `True` if you want the strings to be printed to console
+        main(output_strings=True, wait_for_input=True)
     except KeyboardInterrupt:
         pass
