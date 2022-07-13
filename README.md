@@ -4,7 +4,7 @@ This repository is **only** for converting, encoding and importing a PNG image i
 
 As for the in-game *circuits v2* parsing and printing systems, you will either have to build it yourself 
 or buy it from me.\
-If you're interested in purchasing the cv2 part of the logic, message me on Discord: `McRen#2940`
+If you're interested in purchasing the cv2 part of the logic, message me on Discord: [**McRen#2940**](https://discordapp.com/users/236809680947511297/)
 
 ## How to use 
 
@@ -42,3 +42,8 @@ When done importing the output of the chip will be a `List[List[string]]`.\
 See `Encoding.py` for encoding template.
 
 Currently, only **2560x1440** and **1920x1080** resolutions supported.
+
+#
+If you have any problems with the scripts, the invention or anything else, you can contact me on:
+- [Discord: **McRen#2940**](https://discordapp.com/users/236809680947511297/)
+- [RecRoom: **@McReny**](https://rec.net/user/McReny)
