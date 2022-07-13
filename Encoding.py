@@ -254,11 +254,12 @@ def encode(img: Image) -> list[str] or None:
     return img_data
 
 
-def main(output_strings: bool = False):
+def main(output_strings: bool = False, wait_for_input: bool = False):
     """
     Function to tie together all others.
     Prompt for image, encode and output
 
+    :param wait_for_input: Wait for the user to continue. Useful when running this file directly so that it stays open
     :param output_strings: Print the encoded image strings into the console
     """
 
@@ -278,11 +279,14 @@ def main(output_strings: bool = False):
     print(f"\nGenerated {len(img_data) + 2} strings for image WxH {img.width}x{img.height}")
     print(f"Space needed: {len(img_data) // ListCreateSize} List creates (+ {len(img_data) % ListCreateSize})")
 
+    if wait_for_input:
+        input("Press enter to continue")
+
     return img_data
 
 
 if __name__ == '__main__':
     try:
-        main(output_strings=True)  # Change this to `True` if you want the strings to be printed to console
+        main(output_strings=True, wait_for_input=True)  # Change this to `True` if you want the strings to be printed to console
     except KeyboardInterrupt:
         pass
