@@ -30,6 +30,7 @@ expand the `Chip Settings`\
 
 Scroll down until you see the `Value` input field, as shown in the image below (the `Value` field may be colored green). 
 !["Value" input field of the variable](Images/ImportVariableValueBox.png)
+Now you can run the script and sit back until the importing is done.
 
 If you're unable to configure the variable or if the menu is not appearing, spawn your own `String Variable`, 
 and wire it to the same inputs and outputs as the existing one. The name of the Variable does not matter.\
