@@ -88,14 +88,25 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
 
     :param img_data: A list of strings to be imported into RecRoom
     :param delay: The delay between main actions (click > copy > confirm)
-    :param pause_at_50: Should the script pause for a given amount of time every 50 imported strings (could prevent disconnection)
-    :param stop_at_500: Should the script full stop every 500 imported strings, and wait for the user to press enter (could prevent disconnection)
+    :param pause_at_50: Should the script pause for a given amount of time every 50 imported strings
+    (could prevent disconnection)
+    :param stop_at_500: Should the script full stop every 500 imported strings, and wait for the user to press enter
+    (could prevent disconnection)
     """
 
-    input_field: Tuple[float, float] = (screen_dimensions[0] * 0.5, screen_dimensions[1] * 0.5625)
-    confirm_expand_button: Tuple[float, float] = (screen_dimensions[0] * 0.841015, screen_dimensions[1] * 0.083333)
+    input_field: Tuple[int, int] = (int(screen_dimensions[0] * 0.5),
+                                    int(screen_dimensions[1] * 0.5625))
+    confirm_expand_button: Tuple[int, int] = (int(screen_dimensions[0] * 0.841015),
+                                              int(screen_dimensions[1] * 0.083333))
+
+    color_check = ImageCoords(min_y=int(screen_dimensions[1] * 0.4611),
+                              min_x=int(screen_dimensions[0] * 0.1121),
+                              max_x=int(screen_dimensions[0] * 0.1953),
+                              max_y=int(screen_dimensions[1] * 0.5208))
 
     num_strings: int = len(img_data)
+    sec_to_import: float = delay * 3 * num_strings
+    print(f"Minimum time needed for importing: {int(sec_to_import // 60)} minutes, {int(sec_to_import % 60)} seconds")
 
     if input(f"\nProceed to copy all {num_strings} strings to RecRoom? [y/n] ").lower() == "y":
         time_at_start = time.time()
@@ -105,7 +116,7 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
         # and enter the string into the bottom `if` statement
         start_from_beginning: bool = True
         continue_from_string: str = "|Enter the string here|"
-        "########################################################"
+        "###########################################################"
 
         for num, string in enumerate(img_data):
             is_window_active("Rec Room")
@@ -147,7 +158,7 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
                 print("Failed confirm")
                 time.sleep(delay * 2)
 
-            ### Optional:
+            # Optional:
 
             if stop_at_500 and num and num % 500 == 0:
                 # Every 500 entries stop and let the player continue when they see fit
