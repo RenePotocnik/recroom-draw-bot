@@ -18,10 +18,11 @@ class ImageCoords(NamedTuple):
 
     max_y: int
     max_x: int
-    
+
 
 # Check if the users monitor is 1440p or 1080p
 user32 = ctypes.windll.user32
+user32.SetProcessDPIAware()
 screen_dimensions: Tuple[int, int] = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
 
 
@@ -90,21 +91,10 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
     :param pause_at_50: Should the script pause for a given amount of time every 50 imported strings (could prevent disconnection)
     :param stop_at_500: Should the script full stop every 500 imported strings, and wait for the user to press enter (could prevent disconnection)
     """
-    if screen_dimensions == (2560, 1440):
-        input_field: tuple[int, int] = (1294, 828)
-        confirm_expand_button: tuple[int, int] = (2165, 113)  # Coords of the "Expand All" button
-        confirm_scroll_bar: tuple[int, int] = (2356, 920)  # Coords of the side Scroll Bar
-        
-        color_check = ImageCoords(min_y=662, min_x=262, max_x=400, max_y=680)
-    elif screen_dimensions == (1920, 1080):
-        input_field: tuple[int, int] = (972, 626)
-        confirm_expand_button: tuple[int, int] = (1623, 87)  # Coords of the "Expand All" button
-        confirm_scroll_bar: tuple[int, int] = (1770, 680)  # Coords of the side Scroll Bar
-        color_check = ImageCoords(min_y=504, min_x=210, max_x=300, max_y=540)
-    else:
-        print(f"Your monitor dimensions ({screen_dimensions[0]}x{screen_dimensions[1]}) are not yet supported.")
-        exit(input("Press enter to exit"))
-        
+
+    input_field: Tuple[float, float] = (screen_dimensions[0] * 0.5, screen_dimensions[1] * 0.5625)
+    confirm_expand_button: Tuple[float, float] = (screen_dimensions[0] * 0.841015, screen_dimensions[1] * 0.083333)
+
     num_strings: int = len(img_data)
 
     if input(f"\nProceed to copy all {num_strings} strings to RecRoom? [y/n] ").lower() == "y":
@@ -173,114 +163,6 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
         print(f"Copying complete. Copied {num_strings - 1} strings in {minutes} min and {seconds:.1f} sec")
 
 
-def copy_into_recroom_listcreate(img_data: list[str], auto_continue: bool = False, delay: float = 0.2):
-    """
-    Copy image data into a RecRoom  `list create`.
-    Uses right click to move to the next entry.
-
-    :param img_data: A list of strings of color data for each pixel
-    :param auto_continue: Should drop the trigger handle, starting the printing process
-    """
-    window_title = "Rec Room"
-    num_strings = len(img_data)
-
-    if input(f"\nProceed to copy all {num_strings} strings to {window_title}? [y/n] ").lower() == "y":
-
-        # time.sleep(2)
-        time_at_start = time.time()
-
-        "########################################################"
-        # If you want to continue from an existing string, set `continue_from_beginning` to `False` and enter the string into the
-        # bottom `if` statement
-        start_from_beginning: bool = True
-        "########################################################"
-
-        # True if the string didn't copy successfully.
-        retried: bool = False
-
-        # Last string will empty the list input to signal cv2 that the list of data has ended
-        img_data.append("")
-
-        for num, string in enumerate(img_data):
-            is_window_active(window_title)
-
-            if start_from_beginning or "Enter string" in string:
-                start_from_beginning = True
-            else:
-                continue
-
-            # Copy current string into clipboard
-            pyperclip.copy(string)
-            print(f"Copying string #{num + 1}/{num_strings}")
-            time.sleep(delay)
-
-            for i in range(20):
-                # In RR, click on the current list entry, and the input field
-                pyautogui.click()
-                time.sleep(delay)
-                pyautogui.click(x=1270, y=480)  # pyautogui.click(x=2200, y=257)
-                time.sleep(delay)
-
-                # Paste the string into input
-                pyautogui.hotkey("ctrl", "v")
-                time.sleep(delay)
-
-                # Confirm and exit out of menu
-                # pyautogui.press("enter")
-                # time.sleep(0.5)             # time.sleep(0.2)
-
-                pyautogui.click(x=280, y=767)
-                time.sleep(delay)
-
-                pyautogui.press("esc")
-                time.sleep(delay if num < num_strings / 2 else delay * 2)
-
-                # Check if there's GREEN color in the window specified by the `coordinates`
-                if not found_colors(main_color=(96, 203, 43),
-                                    coordinates=ImageCoords(min_y=725, min_x=1050, max_y=725, max_x=1111)):
-                    # There's no green color, continue with the next string
-                    retried = False
-                    break
-
-                # If the string didn't successfully copy into the string input
-                print("Retrying #", num)
-
-                # If it already restarted this string once, wait a little longer
-                if retried:
-                    retried = False
-                    print("Taking a break", end="\r")
-                    time.sleep(2)
-                else:
-                    retried = True
-                    time.sleep(0.2)
-
-            # Move down using trigger handle in right hand
-            pyautogui.click(button='right')
-            time.sleep(delay)
-        """ # Commented because I might need it in the future
-        # Enter an empty string to signal the in-game circuitry the print is finished
-        time.sleep(0.3)
-        pyautogui.click()
-        time.sleep(0.2)
-        pyautogui.click(x=2200, y=257)
-        time.sleep(0.2)
-        pyautogui.press("backspace")
-        time.sleep(0.2)
-        pyautogui.press("enter")
-        time.sleep(0.2)
-        pyautogui.press("esc")
-        """
-
-        time_to_copy = time.time() - time_at_start
-        minutes = time_to_copy // 60
-        seconds = time_to_copy % 60
-        print(f"Copying complete. Copied {num_strings} strings in {minutes} min and {seconds:.1f} sec")
-
-        if auto_continue:
-            time.sleep(2)
-            pyautogui.press("x")
-
-
 def main():
     # Call function for encoding an image
     img_data: list[str] = Encoding.main()
@@ -289,11 +171,7 @@ def main():
     img_data.insert(0, "BEGIN")
     img_data.append("END")
 
-    # Call function for copying into RecRoom
-    if input("Copy into List Create of Variable? Default: Variable. [enter number]\n1. List Create\n2. Variable\n> ").find("1") != -1:
-        copy_into_recroom_listcreate(img_data=img_data, auto_continue=False, delay=0.3)
-    else:
-        copy_into_rr_variable(img_data, delay=0.4 , pause_at_50=False, stop_at_500=False)
+    copy_into_rr_variable(img_data, delay=0.4, pause_at_50=False, stop_at_500=False)
 
 
 if __name__ == "__main__":
