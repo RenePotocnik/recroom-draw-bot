@@ -40,8 +40,6 @@ The String input of the Variable **should be empty** (as shown in the image belo
 When done importing the output of the chip will be a `List[List[string]]`.\
 See `Encoding.py` for encoding template.
 
-Currently, only **2560x1440** and **1920x1080** resolutions supported.
-
 #
 If you have any problems with the scripts, the invention or anything else, you can contact me on:
 - [Discord: **McRen#2940**](https://discordapp.com/users/236809680947511297/)
