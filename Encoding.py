@@ -117,6 +117,7 @@ RR_PALETTE: dict = {
 # All the RecRoom colors in one list. [R, G, B, R, G, B,...]
 ALL_COLORS = [num for tup in RR_PALETTE.keys() for num in tup]
 
+
 def get_image() -> Image:
     """
     Open file explorer, wait for user to open a PNG image
@@ -198,7 +199,8 @@ def quantize(img) -> Image:
 
     palette_image = Image.new("P", img.size)
     palette_image.putpalette(ALL_COLORS)
-    new_image = img.quantize(palette=palette_image).convert("RGB")
+    new_image = img.quantize(palette=palette_image,
+                             dither=0 if input("Dither the image? [y/n] ").find("n") != -1 else 1).convert("RGB")
 
     print("Opening the final image...")
     new_image.show()
