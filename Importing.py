@@ -4,6 +4,7 @@ import sys
 from tkinter import Image
 from typing import NamedTuple, Tuple
 
+import pygetwindow
 import pyautogui
 import pyperclip
 from PIL import ImageGrab
@@ -23,7 +24,9 @@ class ImageCoords(NamedTuple):
 # Check if the users monitor is 1440p or 1080p
 user32 = ctypes.windll.user32
 user32.SetProcessDPIAware()
-screen_dimensions: Tuple[int, int] = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+SCREEN_DIMENSIONS: Tuple[int, int] = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+if round(SCREEN_DIMENSIONS[0] / SCREEN_DIMENSIONS[1], 2) != 1.78:
+    exit(input("\nScreen dimensions not optimal for importing.\nPress enter to exit"))
 
 
 class Colors(NamedTuple):
@@ -94,15 +97,15 @@ def copy_into_rr_variable(img_data: list[str], delay: float = 0.3, pause_at_50: 
     (could prevent disconnection)
     """
 
-    input_field: Tuple[int, int] = (int(screen_dimensions[0] * 0.5),
-                                    int(screen_dimensions[1] * 0.5625))
-    confirm_expand_button: Tuple[int, int] = (int(screen_dimensions[0] * 0.841015),
-                                              int(screen_dimensions[1] * 0.083333))
+    input_field: Tuple[int, int] = (int(SCREEN_DIMENSIONS[0] * 0.5),
+                                    int(SCREEN_DIMENSIONS[1] * 0.5625))
+    confirm_expand_button: Tuple[int, int] = (int(SCREEN_DIMENSIONS[0] * 0.841015),
+                                              int(SCREEN_DIMENSIONS[1] * 0.083333))
 
-    color_check = ImageCoords(min_y=int(screen_dimensions[1] * 0.4611),
-                              min_x=int(screen_dimensions[0] * 0.1121),
-                              max_x=int(screen_dimensions[0] * 0.1953),
-                              max_y=int(screen_dimensions[1] * 0.5208))
+    color_check = ImageCoords(min_y=int(SCREEN_DIMENSIONS[1] * 0.4611),
+                              min_x=int(SCREEN_DIMENSIONS[0] * 0.1121),
+                              max_x=int(SCREEN_DIMENSIONS[0] * 0.1953),
+                              max_y=int(SCREEN_DIMENSIONS[1] * 0.5208))
 
     num_strings: int = len(img_data)
     sec_to_import: float = delay * 3 * num_strings

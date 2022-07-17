@@ -1,12 +1,17 @@
 # Draw Bot Encoding
 
-This repository is **only** for converting, encoding and importing a PNG image into a RecRoom invention.
+This repository is **only** for converting, encoding and importing a PNG image into a RecRoom invention, which can then be used in an image printer.
 
 As for the in-game *circuits v2* parsing and printing systems, you will either have to build it yourself 
 or buy it from me.\
 If you're interested in purchasing the cv2 part of the logic, message me on Discord: [**McRen#2940**](https://discordapp.com/users/236809680947511297/)
 
 ## How to use 
+
+> **ONLY 16:9 screen ratio supported**\
+> *If you're not sure about your screen ratio, run the script - It'll warn you if your monitor isn't supported*\
+> If you really want to import, yet you don't have the acceptable screen ratio, got to `Setting -> System -> Display` 
+> and change your `Display resolution` to `1920 x 1080`
 
 Run `CanvasPrinter.py`.
 
