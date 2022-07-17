@@ -110,8 +110,8 @@ RR_PALETTE: dict = {
     (73, 74, 78): "¿",
     (45, 46, 50): "À",
     (25, 23, 24): "È",
-    (255, 181, 136): "Ì",  # Tan
-    (254, 254, 254): "Ð"  # # Pure white/eraser. It causes weird edges so it should be avoided.
+    # (255, 181, 136): "Ì",  # Tan
+    # (254, 254, 254): "Ð"  # # Pure white/eraser. It causes weird edges so it should be avoided.
 }
 
 # All the RecRoom colors in one list. [R, G, B, R, G, B,...]
